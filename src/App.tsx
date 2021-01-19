@@ -1,26 +1,59 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react"
+import "./App.css"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+type Users = {
+    username: string
+    age: number | null
+    admin: boolean
 }
 
-export default App;
+const defaultUser: Users = {
+    username: "",
+    age: null,
+    admin: false,
+}
+
+const App: React.FC = () => {
+    const [user, setUser] = useState(defaultUser)
+
+    const handleChange = <P extends keyof Users>(props: P, value: Users[P]) => {
+        setUser({ ...user, [props]: value })
+    }
+
+    return (
+        <div className="App">
+            <input
+                value={user.username}
+                onChange={(e) => {
+                    handleChange("username", e.target.value)
+                }}
+            />
+
+            <input
+                value={user.age || ""}
+                onChange={(e) => {
+                    handleChange("age", parseInt(e.target.value))
+                }}
+            />
+
+            <input
+                type="checkbox"
+                checked={user.admin}
+                onChange={() => {
+                    handleChange("admin", !user.admin)
+                }}
+            />
+
+            {JSON.stringify(user)}
+
+            <input
+                placeholder="username"
+                onChange={(e) => {
+                    setUser({ ...user, username: e.target.value })
+                }}
+            />
+        </div>
+    )
+}
+
+export default App
